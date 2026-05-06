@@ -1,0 +1,53 @@
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+const protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      // Get token from header
+      token = req.headers.authorization.split(' ')[1];
+
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log('Token decoded - id:', decoded.id);
+
+      // Get user from the token
+      req.user = await User.findByPk(decoded.id, {
+        attributes: { exclude: ['password'] }
+      });
+      console.log('User found from token:', req.user ? req.user.id : 'NOT FOUND');
+
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(401).json({ message: 'Not authorized' });
+    }
+  }
+
+  if (!token) {
+    res.status(401).json({ message: 'Not authorized, no token' });
+  }
+};
+
+const lecturerOnly = (req, res, next) => {
+  if (req.user && req.user.role === 'lecturer') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Not authorized as a lecturer' });
+  }
+};
+
+const studentOnly = (req, res, next) => {
+  if (req.user && req.user.role === 'student') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Not authorized as a student' });
+  }
+};
+
+module.exports = { protect, lecturerOnly, studentOnly };

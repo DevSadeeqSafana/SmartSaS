@@ -34,19 +34,18 @@ Ensure you have the following installed:
 3.  Configure environment variables:
     - Open the `.env` file and update your MySQL credentials:
     ```env
-    PORT=5001
+    PORT=5000
     DB_HOST=localhost
     DB_USER=root
     DB_PASS=your_mysql_password
     DB_NAME=sas_db
     JWT_SECRET=your_super_secret_jwt_key
     ```
-    > **Note:** We use port **5001** because port 5000 is often reserved by macOS "AirPlay Receiver".
 4.  Start the server:
     ```bash
     npm run dev
     ```
-    *The API will run at `http://localhost:5001`.*
+    *The API will run at `http://localhost:5000`.*
 
 ---
 
@@ -78,7 +77,7 @@ Ensure you have the following installed:
     ```
 3.  **Configure API URL**:
     - Open `src/api/axios.js`.
-    - Change `BASE_URL` to match your computer's **Local IP Address** (e.g., `192.168.x.x:5001`).
+    - Change `BASE_URL` to match your computer's **Local IP Address** (e.g., `192.168.x.x:5000`).
 4.  Start the Expo project:
     ```bash
     npx expo start
